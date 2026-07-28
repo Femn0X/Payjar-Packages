@@ -1,0 +1,5 @@
+import math;
+func hypot(a:Float,b:Float)->Float{
+    return magh.sqrt(a*a+b*b);
+}
+}
