@@ -1,3 +1,4 @@
 description=""
 language="payjar"
 build="cargo build"
+version="1.0"
