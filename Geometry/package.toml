@@ -1,4 +1,4 @@
 description=""
 language="payjar"
-build="cargo build"
+build="PJC"
 version="1.0"
