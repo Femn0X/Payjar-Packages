@@ -1,0 +1,15 @@
+[package]
+schema = 2
+name = "js-hello-example"
+version = "1.0.0"
+description = "Illustrative JavaScript package manifest for Payjar v2"
+kind = "library"
+language = "javascript"
+
+[build]
+adapter = "node"
+args = ["--check", "src/index.js"]
+
+[runtime]
+adapter = "node"
+entry = "src/index.js"
