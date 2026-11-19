@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "packages": {
+    "Geometry": {
+      "1.0": {
+        "commit": "f014481e93602755d7bcbfa25693654b6e46f99c",
+        "path": "Geometry"
+      }
+    }
+  }
+}
