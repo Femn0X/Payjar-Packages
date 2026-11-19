@@ -1,5 +1,7 @@
 package Geometry;
 
 func hypot(a:Float,b:Float)->Float {
-    return math.sqrt(a*a+b*b);
+    let left:Float = a*a;
+    let right:Float = b*b;
+    return math.sqrt(left+right);
 }
