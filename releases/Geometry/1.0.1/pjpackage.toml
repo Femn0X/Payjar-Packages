@@ -1,0 +1,11 @@
+[package]
+schema = 2
+name = "Geometry"
+version = "1.0.1"
+description = "Geometry helper functions for Payjar"
+kind = "library"
+language = "payjar"
+
+[runtime]
+adapter = "payjar"
+entry = "init.pj"
