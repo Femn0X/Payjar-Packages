@@ -5,6 +5,10 @@
       "1.0": {
         "commit": "f014481e93602755d7bcbfa25693654b6e46f99c",
         "path": "Geometry"
+      },
+      "1.0.1": {
+        "commit": "3bd11686c6619021b5c45fdd63c1240af4d8d097",
+        "path": "releases/Geometry/1.0.1"
       }
     }
   }
