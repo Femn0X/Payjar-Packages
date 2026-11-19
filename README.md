@@ -53,3 +53,7 @@ The legacy `pjpm upload` workflow remains supported by existing clients. The v2 
 - Do not remove or rename legacy package files as part of the transition.
 
 See [FORMAT.md](FORMAT.md) for the manifest specification and migration rules.
+
+## Versioned releases
+
+Newer clients can discover immutable historical versions through [`releases.json`](releases.json). Every release points to a full Git commit SHA and a package path at that commit; the old root package directories remain compatible with existing clients. See [RELEASES.md](RELEASES.md) for the catalog schema, publishing sequence, and security limitations.
