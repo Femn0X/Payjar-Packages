@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Offline validation for the immutable releases.json registry index."""
+"""Validate release catalog syntax, additive changes, and optional Git source contents."""
+import argparse
 import json
 import re
+import subprocess
 import sys
+import tomllib
 from pathlib import Path, PurePosixPath
 
 COMMIT = re.compile(r"[0-9a-f]{40}\Z")
@@ -37,14 +40,64 @@ def validate(doc):
                 raise ValueError(f"{name}@{version}: unsafe package path")
 
 
+def check_additive(current, baseline):
+    for name, versions in baseline["packages"].items():
+        for version, old in versions.items():
+            fresh = current["packages"].get(name, {}).get(version)
+            if fresh != old:
+                raise ValueError(f"{name}@{version}: published release was removed or changed")
+
+
+def git_read(ref, path):
+    result = subprocess.run(["git", "show", f"{ref}:{path}"],
+                            capture_output=True, check=False)
+    return result.stdout if result.returncode == 0 else None
+
+
+def check_sources(doc):
+    for name, versions in doc["packages"].items():
+        for version, record in versions.items():
+            ref, base = record["commit"], record["path"]
+            v2 = git_read(ref, f"{base}/pjpackage.toml")
+            old = git_read(ref, f"{base}/package.toml")
+            if v2 is not None:
+                try:
+                    manifest = tomllib.loads(v2.decode("utf-8"))
+                except (UnicodeDecodeError, ValueError) as exc:
+                    raise ValueError(f"{name}@{version}: invalid pinned v2 manifest: {exc}") from exc
+                pkg = manifest.get("package", {})
+                if pkg.get("schema") != 2 or pkg.get("name") != name or pkg.get("version") != version:
+                    raise ValueError(f"{name}@{version}: pinned v2 schema/name/version mismatch")
+            elif old is not None:
+                try:
+                    manifest = tomllib.loads(old.decode("utf-8"))
+                except (UnicodeDecodeError, ValueError) as exc:
+                    raise ValueError(f"{name}@{version}: invalid pinned legacy manifest: {exc}") from exc
+                if str(manifest.get("version", "0.0.0")) != version:
+                    raise ValueError(f"{name}@{version}: pinned legacy version mismatch")
+            elif version != "0.0.0" or git_read(ref, f"{base}/init.pj") is None:
+                raise ValueError(f"{name}@{version}: pinned commit/path lacks a matching package manifest")
+
+
 def main():
-    src = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("releases.json")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("index", nargs="?", default="releases.json")
+    parser.add_argument("--baseline", help="previous releases.json to enforce append-only records")
+    parser.add_argument("--check-git", action="store_true", help="verify pinned files are in local Git history")
+    args = parser.parse_args()
     try:
-        validate(json.loads(src.read_text(encoding="utf-8")))
+        current = json.loads(Path(args.index).read_text(encoding="utf-8"))
+        validate(current)
+        if args.baseline:
+            baseline = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+            validate(baseline)
+            check_additive(current, baseline)
+        if args.check_git:
+            check_sources(current)
     except (OSError, ValueError) as exc:
         print(f"release index invalid: {exc}", file=sys.stderr)
         return 1
-    print(f"release index valid: {src}")
+    print("release index valid; existing entries unchanged and pinned sources checked when requested")
     return 0
 
 
