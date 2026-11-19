@@ -1,0 +1,5 @@
+package Geometry;
+
+func hypot(a:Float,b:Float)->Float {
+    return math.sqrt(a*a+b*b);
+}
