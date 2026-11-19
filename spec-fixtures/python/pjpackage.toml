@@ -1,0 +1,15 @@
+[package]
+schema = 2
+name = "py-math-example"
+version = "1.0.0"
+description = "Illustrative Python package manifest for Payjar v2"
+kind = "library"
+language = "python"
+
+[build]
+adapter = "python"
+args = ["-m", "build"]
+
+[runtime]
+adapter = "python"
+entry = "src/py_math.py"
