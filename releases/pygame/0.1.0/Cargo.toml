@@ -1,0 +1,10 @@
+[package]
+name = "payjar-pygame"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Portable software-rendered 2D game core for Payjar"
+
+[lib]
+name = "pygame"
+path = "src/lib.rs"
