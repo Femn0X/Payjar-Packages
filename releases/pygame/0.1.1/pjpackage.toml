@@ -1,0 +1,15 @@
+[package]
+schema = 2
+name = "pygame"
+version = "0.1.1"
+description = "Portable Rust 2D game development core inspired by Pygame"
+kind = "library"
+language = "rust"
+
+[build]
+adapter = "cargo"
+args = ["build", "--release"]
+
+[runtime]
+adapter = "native"
+library = "pygame"
