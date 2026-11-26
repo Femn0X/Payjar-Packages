@@ -15,6 +15,10 @@
       "0.1.0": {
         "commit": "1f6afe51b142545a6ffc254cd40b65f3b8642a9f",
         "path": "releases/pygame/0.1.0"
+      },
+      "0.1.1": {
+        "commit": "8be4235aef8f7d52447f2b85fa63c01ef2540739",
+        "path": "releases/pygame/0.1.1"
       }
     }
   }
